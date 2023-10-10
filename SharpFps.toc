@@ -1,0 +1,12 @@
+## Interface: 100107
+## Title: SharpFps
+## Notes: Maximum Fury warning
+## Author: Sharpedge-Gaming
+## Maintainer: Sharpedge_Gaming
+## Version: v0.
+## IconTexture: 458971
+##SavedVariables: SharpFpsDB
+
+
+embeds.xml
+SharpFps.lua
