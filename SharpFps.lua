@@ -1,3 +1,7 @@
+-- SharpFps
+-- Made by Sharpedge_Gaming
+--v1.3
+
 local addonName = "SharpFps"
 
 local AceAddon = LibStub("AceAddon-3.0")
@@ -46,6 +50,7 @@ function SharpFps:ToggleEnabled(value)
     end
 end
 
+frame:SetScale(1)
 frame:SetMovable(true)
 frame:EnableMouse(true)
 frame:RegisterForDrag("LeftButton")
