@@ -1,6 +1,6 @@
 -- SharpFps
 -- Made by Sharpedge_Gaming
---v1.3
+-- v1.6
 
 local addonName = "SharpFps"
 
@@ -13,19 +13,18 @@ local SharpFps = AceAddon:NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0")
 
 local savedVariables = {
     profile = {
-	    font = "Friz Quadrata TT",  -- This is the default font
+        font = "Friz Quadrata TT",  -- Default font
         enabled = true,  -- Default to enabled
         fontSize = 12,
         textColor = {r = 1, g = 1, b = 1, a = 1},
         showHome = true,
         showWorld = true,
+        position = { point = "CENTER", relativePoint = "CENTER", x = 0, y = 0 }  -- Default position
     }
 }
 
 local frame = CreateFrame("Frame", "SharpFpsFrame", UIParent)
-frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 frame:SetSize(200, 70)
-
 frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 frame.text:SetPoint("CENTER", frame, "CENTER", 0, 0)
 
@@ -39,8 +38,8 @@ function SharpFps:OnInitialize()
     
     frame.text:SetTextColor(db.profile.textColor.r, db.profile.textColor.g, db.profile.textColor.b, db.profile.textColor.a)
     self:ToggleEnabled(db.profile.enabled)
+    self:UpdateFramePosition()
 end
-
 
 function SharpFps:ToggleEnabled(value)
     if value then
@@ -50,12 +49,24 @@ function SharpFps:ToggleEnabled(value)
     end
 end
 
+function SharpFps:UpdateFramePosition()
+    frame:ClearAllPoints()
+    frame:SetPoint(db.profile.position.point, UIParent, db.profile.position.relativePoint, db.profile.position.x, db.profile.position.y)
+end
+
 frame:SetScale(1)
 frame:SetMovable(true)
 frame:EnableMouse(true)
 frame:RegisterForDrag("LeftButton")
 frame:SetScript("OnDragStart", frame.StartMoving)
-frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+frame:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing()
+    local point, _, relativePoint, xOfs, yOfs = self:GetPoint()
+    db.profile.position.point = point
+    db.profile.position.relativePoint = relativePoint
+    db.profile.position.x = xOfs
+    db.profile.position.y = yOfs
+end)
 
 frame:SetScript("OnUpdate", function(self, elapsed)
     local fps = GetFramerate()
@@ -129,26 +140,26 @@ local options = {
             hasAlpha = true,
             order = 5,
         },
-		font = {
-    name = "Font",
-    type = "select",
-    desc = "Set the font of the FPS counter",
-    values = LSM:HashTable("font"),
-    dialogControl = "LSM30_Font",
-    get = function()
-        return db.profile.font
-    end,
-    set = function(info, value)
-        db.profile.font = value
-        local fontPath = LSM:Fetch("font", value)
-        frame.text:SetFont(fontPath, db.profile.fontSize, "OUTLINE")
-    end,
-    order = 6,  -- Adjust the order value to position the option correctly
-},
+        font = {
+            name = "Font",
+            type = "select",
+            desc = "Set the font of the FPS counter",
+            values = LSM:HashTable("font"),
+            dialogControl = "LSM30_Font",
+            get = function()
+                return db.profile.font
+            end,
+            set = function(info, value)
+                db.profile.font = value
+                local fontPath = LSM:Fetch("font", value)
+                frame.text:SetFont(fontPath, db.profile.fontSize, "OUTLINE")
+            end,
+            order = 6,  -- Adjust the order value to position the option correctly
+        },
         latencyHeader = {
             name = "Latency Display",
             type = "header",
-            order = 6,
+            order = 7,
         },
         showHome = {
             name = "Show Home Latency",
@@ -160,7 +171,7 @@ local options = {
             set = function(info, value)
                 db.profile.showHome = value
             end,
-            order = 7,
+            order = 8,
         },
         showWorld = {
             name = "Show World Latency",
@@ -172,40 +183,10 @@ local options = {
             set = function(info, value)
                 db.profile.showWorld = value
             end,
-            order = 8,
+            order = 9,
         },
     },
 }
 
 AceConfig:RegisterOptionsTable("SharpFpsFrame", options)
 AceConfigDialog:AddToBlizOptions("SharpFpsFrame", "Sharp FPS")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
