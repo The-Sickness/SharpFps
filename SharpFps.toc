@@ -1,9 +1,9 @@
-## Interface: 100207, 110000
+## Interface: 16001, 120100
 ## Title: SharpFps
 ## Notes: Maximum Fury warning
 ## Author: Sharpedge-Gaming
 ## Maintainer: Sharpedge_Gaming
-## Version: v1.6
+## Version: v2.6
 ## IconTexture: 458971
 ##SavedVariables: SharpFpsDB
 
